@@ -1,0 +1,9 @@
+info:
+  contact:
+    email: syedmrizwan@outlook.com
+    name: API Support
+  description: Notification Service Blueprint.
+  title: Notification Service
+  version: "1.0"
+paths: {}
+swagger: "2.0"

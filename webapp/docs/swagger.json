@@ -1,0 +1,13 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Notification Service Blueprint.",
+        "title": "Notification Service",
+        "contact": {
+            "name": "API Support",
+            "email": "syedmrizwan@outlook.com"
+        },
+        "version": "1.0"
+    },
+    "paths": {}
+}
