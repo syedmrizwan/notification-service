@@ -1,0 +1,62 @@
+version: '3.6'
+
+services:
+  go-server:
+    image: syedmrizwan/notification_service_webapp:v0.0.1
+    container_name: go-server
+    environment:
+      - DB_NAME=notification_service
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=1234
+      - DB_HOST=127.0.0.1
+      - DB_PORT=5432
+      - DB_POOL_SIZE=10
+      - IS_CONTAINER=true
+      - BUILD_ENV=dev
+      - SERVER_HOST=0.0.0.0
+      - SERVER_PORT=8080
+      - NATS_URL=nats://127.0.0.1:4222
+      - NATS_CLUSTER_ID=cluster1
+      - NATS_CLIENT_ID=test-client2
+    depends_on:
+      - postgres_server
+    ports:
+      - 8080:8080
+    network_mode: 'host'
+
+
+  postgres_server:
+    image: postgres:12
+    container_name: postgres-server
+    environment:
+      - "POSTGRES_USER=postgres"
+      - "POSTGRES_DB=notification_service"
+      - "POSTGRES_PASSWORD=1234"
+    volumes:
+    - postgres_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    network_mode: 'host'
+
+  nats-streaming-server:
+    image: nats-streaming
+    command: -store file -m 8222 -dir datastore --cluster_id cluster1
+    ports:
+      - 4222:4222
+      - 8222:8222
+    network_mode: 'host'
+
+
+  # go-migrations:
+  #   image: registry.gitlab.com/netnology_services_platform/training_portal_db_migration:v0.0.5
+  #   container_name: go-migrations
+  #   command: -path=/migrations/ -database "postgres://postgres:1234@localhost:5432/training_portal?sslmode=disable" up
+  #   network_mode: 'host'
+  #   restart: on-failure:10
+  #   depends_on:
+  #     - postgres_server
+
+
+
+volumes:
+  postgres_data: {}

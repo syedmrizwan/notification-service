@@ -1,5 +1,17 @@
 # Notification Service Web App
 
+**Build a compiled binary executable** 
+
+`CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo .`
+
+**Building image**
+
+`docker build -t syedmrizwan/notification_service_webapp:v0.0.1 .`
+
+**Pushing image**
+
+`docker push syedmrizwan/notification_service_webapp:v0.0.1`
+
 ##### **Environment variables and values**
 ```
 DB_NAME=notification_service
