@@ -47,14 +47,14 @@ services:
     network_mode: 'host'
 
 
-  # go-migrations:
-  #   image: registry.gitlab.com/netnology_services_platform/training_portal_db_migration:v0.0.5
-  #   container_name: go-migrations
-  #   command: -path=/migrations/ -database "postgres://postgres:1234@localhost:5432/training_portal?sslmode=disable" up
-  #   network_mode: 'host'
-  #   restart: on-failure:10
-  #   depends_on:
-  #     - postgres_server
+  go-migrations:
+    build: ../migrator
+    container_name: go-migrations
+    command: -path=/migrations/ -database "postgres://postgres:1234@localhost:5432/notification_service?sslmode=disable" up
+    network_mode: 'host'
+    restart: on-failure:10
+    depends_on:
+      - postgres_server
 
 
 
