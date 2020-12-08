@@ -1,6 +1,7 @@
 package main
 
 import (
+	"notification_service_webapp/api"
 	"notification_service_webapp/util"
 	"os"
 	"time"
@@ -36,7 +37,7 @@ func main() {
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	// Route Paths
-	//api.RegisterRoutes(r.Group("/api/v1"))
+	api.RegisterRoutes(r.Group("/api/v1"))
 
 	err := r.Run(env.Env.ServerHost + ":" + env.Env.ServerPort) // listen and serve on 0.0.0.0:8080 --> 127.0.0.1:8080
 

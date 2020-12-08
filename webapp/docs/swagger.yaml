@@ -1,3 +1,52 @@
+definitions:
+  api.NotificationPostBody:
+    properties:
+      Priority:
+        type: string
+      notification_mode:
+        type: string
+      notification_text:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  model.Notification:
+    properties:
+      Priority:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      notification_handler:
+        $ref: '#/definitions/model.NotificationHandler'
+      notification_handler_id:
+        type: integer
+      notification_text:
+        $ref: '#/definitions/model.NotificationText'
+      notification_text_id:
+        type: integer
+      status:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  model.NotificationHandler:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      rate_per_minute:
+        type: integer
+    type: object
+  model.NotificationText:
+    properties:
+      id:
+        type: integer
+      message:
+        type: string
+    type: object
 info:
   contact:
     email: syedmrizwan@outlook.com
@@ -5,5 +54,41 @@ info:
   description: Notification Service Blueprint.
   title: Notification Service
   version: "1.0"
-paths: {}
+paths:
+  /api/v1/notifications:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Notification'
+            type: array
+      summary: Get All Notifications
+      tags:
+      - Notifications
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: description
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/api.NotificationPostBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Notification'
+      summary: Create Notifications
+      tags:
+      - Notifications
 swagger: "2.0"

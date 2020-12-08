@@ -26,6 +26,10 @@ type envFile struct {
 	RedisAddress  string
 }
 
+func (e *envFile) GetAddr() string {
+	return e.DbHost + ":" + e.DbPort
+}
+
 var Env *envFile
 
 func init() {

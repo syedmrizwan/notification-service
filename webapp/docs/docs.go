@@ -26,7 +26,140 @@ var doc = `{
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
-    "paths": {}
+    "paths": {
+        "/api/v1/notifications": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Get All Notifications",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Notification"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Create Notifications",
+                "parameters": [
+                    {
+                        "description": "description",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.NotificationPostBody"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Notification"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "api.NotificationPostBody": {
+            "type": "object",
+            "properties": {
+                "Priority": {
+                    "type": "string"
+                },
+                "notification_mode": {
+                    "type": "string"
+                },
+                "notification_text": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.Notification": {
+            "type": "object",
+            "properties": {
+                "Priority": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "notification_handler": {
+                    "$ref": "#/definitions/model.NotificationHandler"
+                },
+                "notification_handler_id": {
+                    "type": "integer"
+                },
+                "notification_text": {
+                    "$ref": "#/definitions/model.NotificationText"
+                },
+                "notification_text_id": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.NotificationHandler": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "rate_per_minute": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.NotificationText": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        }
+    }
 }`
 
 type swaggerInfo struct {

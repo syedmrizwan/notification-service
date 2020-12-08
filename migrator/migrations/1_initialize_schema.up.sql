@@ -1,4 +1,4 @@
-create table if not exists notification_handler
+create table if not exists notification_handlers
 (
 	id serial not null
 		constraint notification_handler_pk
@@ -7,9 +7,9 @@ create table if not exists notification_handler
 	rate_per_minute integer
 );
 
-alter table notification_handler owner to postgres;
+alter table notification_handlers owner to postgres;
 
-create table if not exists notification_text
+create table if not exists notification_texts
 (
 	id serial not null
 		constraint notification_text_pk
@@ -17,9 +17,9 @@ create table if not exists notification_text
 	message text
 );
 
-alter table notification_text owner to postgres;
+alter table notification_texts owner to postgres;
 
-create table if not exists notification
+create table if not exists notifications
 (
 	id serial not null
 		constraint notification_pk
@@ -29,15 +29,15 @@ create table if not exists notification
 	user_id integer,
 	notification_text_id integer
 		constraint notification_notification_text__fk
-			references notification_text,
+			references notification_texts,
 	notification_handler_id integer
 		constraint notification_notification_handler__fk
-			references notification_handler,
+			references notification_handlers,
 	created_at timestamp default now()
 );
 
 alter table notification owner to postgres;
 
 
-insert into notification_handler (id, name, rate_per_minute) values (1, 'SMS', 15);
-insert into notification_handler (id, name, rate_per_minute) values (2, 'Email', 30);
+insert into notification_handlers (id, name, rate_per_minute) values (1, 'SMS', 15);
+insert into notification_handlers (id, name, rate_per_minute) values (2, 'Email', 30);
