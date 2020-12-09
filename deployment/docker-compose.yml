@@ -32,9 +32,13 @@ services:
       - NATS_URL=nats://127.0.0.1:4222
       - NATS_CLUSTER_ID=cluster1
       - NATS_CLIENT_ID=test-client2
+      - REDIS_HOST=127.0.0.1
+      - REDIS_PORT=6379
       - RATE_LIMITER_CHANNEL_NAME=Notification.Service.Rate.Limiter
+      - NOTIFICATION_HANDLER_CHANNEL_NAME=Notification.Handlers
     depends_on:
       - nats-streaming-server
+      - redis
     network_mode: 'host'
 
   postgres_server:
@@ -67,6 +71,12 @@ services:
     restart: on-failure:10
     depends_on:
       - postgres_server
+
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+    network_mode: 'host'
 
 
 

@@ -23,8 +23,6 @@ type envFile struct {
 	NatsClient         string
 	RateLimiterChannel string
 	IsContainer        bool
-	RedisPassword      string
-	RedisAddress       string
 }
 
 func (e *envFile) GetAddr() string {
@@ -56,7 +54,5 @@ func init() {
 		RateLimiterChannel: os.Getenv("RATE_LIMITER_CHANNEL_NAME"),
 		DbPoolSize:         DbPoolSize,
 		IsContainer:        IsContainer,
-		RedisAddress:       os.Getenv("REDIS_ADDRESS"),
-		RedisPassword:      os.Getenv("REDIS_PASSWORD"),
 	}
 }
