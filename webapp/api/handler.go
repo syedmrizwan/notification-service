@@ -2,8 +2,11 @@ package api
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"net/http"
 	"notification_service_webapp/database"
+	"notification_service_webapp/env"
 	"notification_service_webapp/model"
 	"notification_service_webapp/util"
 
@@ -88,10 +91,11 @@ func createNotifications(c *gin.Context) {
 
 	notification := model.Notification{
 		Priority:              notificationPostBody.Priority,
-		Status:                util.SENDING,
 		UserId:                notificationPostBody.UserId,
 		NotificationHandlerID: notificationHandler.ID,
+		NotificationHandler:   &notificationHandler,
 		NotificationTextID:    notificationText.ID,
+		NotificationText:      &notificationText,
 	}
 
 	if err := db.Insert(&notification); err != nil {
@@ -100,5 +104,10 @@ func createNotifications(c *gin.Context) {
 		return
 	}
 
+	message, _ := json.Marshal(notification)
+	if err := PushMessageToNATS(fmt.Sprintf("%s.%s", env.Env.NatsClient, notification.Priority), message); err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
 	c.JSON(http.StatusOK, notification)
 }

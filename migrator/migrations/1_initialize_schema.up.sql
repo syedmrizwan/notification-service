@@ -25,7 +25,6 @@ create table if not exists notifications
 		constraint notification_pk
 			primary key,
 	priority text,
-	status text,
 	user_id integer,
 	notification_text_id integer
 		constraint notification_notification_text__fk

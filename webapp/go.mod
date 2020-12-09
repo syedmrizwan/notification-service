@@ -9,6 +9,8 @@ require (
 	github.com/go-openapi/spec v0.19.15 // indirect
 	github.com/go-pg/pg/v9 v9.2.0
 	github.com/joho/godotenv v1.3.0
+	github.com/nats-io/stan.go v0.7.0
+	github.com/pborman/uuid v1.2.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/swaggo/files v0.0.0-20190704085106-630677cd5c14
 	github.com/swaggo/gin-swagger v1.3.0

@@ -26,8 +26,6 @@ definitions:
         $ref: '#/definitions/model.NotificationText'
       notification_text_id:
         type: integer
-      status:
-        type: string
       user_id:
         type: integer
     type: object

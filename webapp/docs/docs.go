@@ -126,9 +126,6 @@ var doc = `{
                 "notification_text_id": {
                     "type": "integer"
                 },
-                "status": {
-                    "type": "string"
-                },
                 "user_id": {
                     "type": "integer"
                 }

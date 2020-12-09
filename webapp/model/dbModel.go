@@ -16,7 +16,6 @@ type NotificationHandler struct {
 type Notification struct {
 	ID                    int64                `pg:",pk" json:"id"`
 	Priority              string               `json:"Priority"`
-	Status                string               `json:"status"`
 	UserId                int                  `json:"user_id"`
 	NotificationTextID    int                  `pg:",fk" json:"notification_text_id"`
 	NotificationText      *NotificationText    `json:"notification_text"`
