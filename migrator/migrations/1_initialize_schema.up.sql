@@ -35,7 +35,7 @@ create table if not exists notifications
 	created_at timestamp default now()
 );
 
-alter table notification owner to postgres;
+alter table notifications owner to postgres;
 
 
 insert into notification_handlers (id, name, rate_per_minute) values (1, 'SMS', 15);

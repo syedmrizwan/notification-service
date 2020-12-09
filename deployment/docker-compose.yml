@@ -17,13 +17,25 @@ services:
       - SERVER_PORT=8080
       - NATS_URL=nats://127.0.0.1:4222
       - NATS_CLUSTER_ID=cluster1
-      - NATS_CLIENT_ID=test-client2
+      - NATS_CLIENT_ID=test-client1
+      - RATE_LIMITER_CHANNEL_NAME=Notification.Service.Rate.Limiter
     depends_on:
       - postgres_server
     ports:
       - 8080:8080
     network_mode: 'host'
 
+  rate-limiter:
+    build: ../rate-limiter
+    container_name: rate-limiter
+    environment:
+      - NATS_URL=nats://127.0.0.1:4222
+      - NATS_CLUSTER_ID=cluster1
+      - NATS_CLIENT_ID=test-client2
+      - RATE_LIMITER_CHANNEL_NAME=Notification.Service.Rate.Limiter
+    depends_on:
+      - nats-streaming-server
+    network_mode: 'host'
 
   postgres_server:
     image: postgres:12

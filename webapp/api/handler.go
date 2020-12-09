@@ -105,7 +105,7 @@ func createNotifications(c *gin.Context) {
 	}
 
 	message, _ := json.Marshal(notification)
-	if err := PushMessageToNATS(fmt.Sprintf("%s.%s", env.Env.NatsClient, notification.Priority), message); err != nil {
+	if err := PushMessageToNATS(fmt.Sprintf("%s.%s", env.Env.RateLimiterChannel, notification.Priority), message); err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
