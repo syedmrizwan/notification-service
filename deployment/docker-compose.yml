@@ -35,10 +35,34 @@ services:
       - REDIS_HOST=127.0.0.1
       - REDIS_PORT=6379
       - RATE_LIMITER_CHANNEL_NAME=Notification.Service.Rate.Limiter
-      - NOTIFICATION_HANDLER_CHANNEL_NAME=Notification.Handlers
+      - NOTIFICATION_HANDLER_CHANNEL_NAME=Notification.Handler
     depends_on:
       - nats-streaming-server
       - redis
+    network_mode: 'host'
+
+  sms-handler:
+    build: ../notification_handler
+    container_name: sms-handler
+    environment:
+      - NATS_URL=nats://127.0.0.1:4222
+      - NATS_CLUSTER_ID=cluster1
+      - NATS_CLIENT_ID=test-client3
+      - NOTIFICATION_HANDLER_CHANNEL_NAME=Notification.Handler.SMS
+    depends_on:
+      - nats-streaming-server
+    network_mode: 'host'
+
+  email-handler:
+    build: ../notification_handler
+    container_name: email-handler
+    environment:
+      - NATS_URL=nats://127.0.0.1:4222
+      - NATS_CLUSTER_ID=cluster1
+      - NATS_CLIENT_ID=test-client4
+      - NOTIFICATION_HANDLER_CHANNEL_NAME=Notification.Handler.Email
+    depends_on:
+      - nats-streaming-server
     network_mode: 'host'
 
   postgres_server:
@@ -62,6 +86,11 @@ services:
       - 8222:8222
     network_mode: 'host'
 
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+    network_mode: 'host'
 
   go-migrations:
     build: ../migrator
@@ -71,13 +100,6 @@ services:
     restart: on-failure:10
     depends_on:
       - postgres_server
-
-  redis:
-    image: redis
-    ports:
-      - 6379:6379
-    network_mode: 'host'
-
 
 
 volumes:

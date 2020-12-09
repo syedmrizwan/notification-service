@@ -1,3 +1,3 @@
 '''Constants'''
-LOGGER_NAME = 'Rate Limiter'
+LOGGER_NAME = 'Notification Handler'
 LOGGING_FILE_NAME = 'logging.conf'

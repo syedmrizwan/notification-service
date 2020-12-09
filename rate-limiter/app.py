@@ -41,14 +41,16 @@ async def handle_requests(nats_conn, subject_name):
         notification_data = json.loads(msg.data.decode())
         try:
             logger.info("Message received %s ...", notification_data)
-            if throttle(notification_data['notification_handler']['name'],
-                        notification_data['notification_handler']['rate_per_minute']):
+            notification_handler_name = notification_data['notification_handler']['name']
+            if throttle(notification_handler_name, notification_data['notification_handler']['rate_per_minute']):
                 # fetch data from user service
+                notification_data['user_name'] = 'Rizwan'
                 notification_data['phone'] = '0321-8550442'
                 notification_data['email'] = 'syed.m.rizwan@outlook.com'
                 notification_data['device_id'] = 'A4X-2dx'
+                del notification_data['notification_handler']
                 await sc.publish(
-                    NOTIFICATION_HANDLER_CHANNEL_NAME + "." + notification_data['notification_handler']['name'],
+                    NOTIFICATION_HANDLER_CHANNEL_NAME + "." + notification_handler_name,
                     json.dumps(notification_data).encode('utf-8'), ack_wait=600)
             await sc.ack(msg)
         except Exception as e:
