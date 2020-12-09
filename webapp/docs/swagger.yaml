@@ -1,4 +1,15 @@
 definitions:
+  api.BulkNotificationBody:
+    properties:
+      notification_mode:
+        type: string
+      notification_text:
+        type: string
+      user_ids:
+        items:
+          type: integer
+        type: array
+    type: object
   api.NotificationPostBody:
     properties:
       Priority:
@@ -53,6 +64,29 @@ info:
   title: Notification Service
   version: "1.0"
 paths:
+  /api/v1/bulk-notifications:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: description
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/api.BulkNotificationBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Notification'
+            type: array
+      summary: Create Bulk Notifications
+      tags:
+      - Notifications
   /api/v1/notifications:
     get:
       consumes:

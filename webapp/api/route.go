@@ -5,4 +5,5 @@ import "github.com/gin-gonic/gin"
 func RegisterRoutes(router *gin.RouterGroup) {
 	router.GET("/notifications", getNotifications)
 	router.POST("/notifications", createNotifications)
+	router.POST("/bulk-notifications", createBulkNotifications)
 }

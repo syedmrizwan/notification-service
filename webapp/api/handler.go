@@ -22,6 +22,12 @@ type NotificationPostBody struct {
 	NotificationMode string `json:"notification_mode"`
 }
 
+type BulkNotificationBody struct {
+	NotificationText string `json:"notification_text"`
+	NotificationMode string `json:"notification_mode"`
+	UserIds          []int  `json:"user_ids"`
+}
+
 type ResponseBody struct {
 	Message string `json:"message"`
 }
@@ -110,4 +116,72 @@ func createNotifications(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, notification)
+}
+
+// createBulkNotifications godoc
+// @Tags Notifications
+// @Summary Create Bulk Notifications
+// @Accept json
+// @Produce json
+// @Param payload body BulkNotificationBody true "description"
+// @Success 200 {object} []model.Notification
+// @Router /api/v1/bulk-notifications [POST]
+func createBulkNotifications(c *gin.Context) {
+	logger := util.GetLogger()
+	defer logger.Sync()
+	logger.Info("Message received for createBulkNotifications")
+	ctx, cancel := context.WithTimeout(c, 2*time.Minute)
+	defer cancel()
+	db := database.GetConnection()
+
+	var bulkNotificationBody BulkNotificationBody
+	if err := c.ShouldBindJSON(&bulkNotificationBody); err != nil {
+		logger.Error(err.Error())
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	notificationHandler := model.NotificationHandler{Name: bulkNotificationBody.NotificationMode}
+	if err := db.ModelContext(ctx, &notificationHandler).Where("name = ?name").Select(); err != nil {
+		logger.Error(err.Error())
+		c.JSON(http.StatusNotFound, ResponseBody{Message: "Notification Mode does not exists"})
+		return
+	}
+
+	notificationText := model.NotificationText{Message: bulkNotificationBody.NotificationText}
+	if _, err := db.ModelContext(ctx, &notificationText).Where("message = ?message").SelectOrInsert(); err != nil {
+		logger.Error(err.Error())
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	var notifications []*model.Notification
+	for _, userId := range bulkNotificationBody.UserIds {
+
+		notification := &model.Notification{
+			Priority:              "Low",
+			UserId:                userId,
+			NotificationHandlerID: notificationHandler.ID,
+			NotificationHandler:   &notificationHandler,
+			NotificationTextID:    notificationText.ID,
+			NotificationText:      &notificationText,
+		}
+		notifications = append(notifications, notification)
+	}
+
+	//Bulk insertion
+	if err := db.Insert(&notifications); err != nil {
+		logger.Error(err.Error())
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	for _, notification := range notifications {
+		message, _ := json.Marshal(notification)
+		if err := PushMessageToNATS(fmt.Sprintf("%s.%s", env.Env.RateLimiterChannel, notification.Priority), message); err != nil {
+			c.AbortWithError(http.StatusInternalServerError, err)
+			return
+		}
+	}
+	c.JSON(http.StatusOK, notifications)
 }
