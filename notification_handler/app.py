@@ -36,6 +36,7 @@ async def handle_requests(nats_conn, subject_name):
         notification_data = json.loads(msg.data.decode())
         try:
             logger.info("Notification Handler received %s ...", notification_data)
+            # Handler internal logic by calling SMS or Email Vendor
             await sc.ack(msg)
         except Exception as e:
             logger.exception(e)

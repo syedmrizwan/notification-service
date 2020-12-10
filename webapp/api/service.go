@@ -1,11 +1,13 @@
 package api
 
 import (
-	"github.com/nats-io/stan.go"
 	"notification_service_webapp/env"
 	"notification_service_webapp/util"
+
+	"github.com/nats-io/stan.go"
 )
 
+// PushMessageToNATS published message on the given channel name
 func PushMessageToNATS(channelName string, message []byte) error {
 	logger := util.GetLogger()
 	logger.Info("Message received for PushMessageToNATS")
