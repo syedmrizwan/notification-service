@@ -46,7 +46,7 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api.BulkNotificationBody"
+                            "$ref": "#/definitions/model.BulkNotificationBody"
                         }
                     }
                 ],
@@ -105,7 +105,7 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api.NotificationPostBody"
+                            "$ref": "#/definitions/model.NotificationPostBody"
                         }
                     }
                 ],
@@ -121,7 +121,7 @@ var doc = `{
         }
     },
     "definitions": {
-        "api.BulkNotificationBody": {
+        "model.BulkNotificationBody": {
             "type": "object",
             "properties": {
                 "notification_mode": {
@@ -135,23 +135,6 @@ var doc = `{
                     "items": {
                         "type": "integer"
                     }
-                }
-            }
-        },
-        "api.NotificationPostBody": {
-            "type": "object",
-            "properties": {
-                "Priority": {
-                    "type": "string"
-                },
-                "notification_mode": {
-                    "type": "string"
-                },
-                "notification_text": {
-                    "type": "string"
-                },
-                "user_id": {
-                    "type": "integer"
                 }
             }
         },
@@ -194,6 +177,23 @@ var doc = `{
                     "type": "string"
                 },
                 "rate_per_minute": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.NotificationPostBody": {
+            "type": "object",
+            "properties": {
+                "Priority": {
+                    "type": "string"
+                },
+                "notification_mode": {
+                    "type": "string"
+                },
+                "notification_text": {
+                    "type": "string"
+                },
+                "user_id": {
                     "type": "integer"
                 }
             }

@@ -1,7 +1,10 @@
 package main
 
 import (
-	"notification_service_webapp/api"
+	"notification_service_webapp/database"
+	"notification_service_webapp/handler"
+	"notification_service_webapp/repository"
+	"notification_service_webapp/service"
 	"notification_service_webapp/util"
 	"os"
 	"time"
@@ -28,8 +31,19 @@ func main() {
 	if env.Env.BuildEnv == util.PRODUCTION {
 		gin.SetMode(gin.ReleaseMode)
 	}
+	db := database.GetConnection()
+	notificationRepository := repository.NewNotificationRepository(db)
 
+	notificationService := service.NewNotificationService(&service.NSConfig{
+		NotificationRepository: notificationRepository,
+	})
 	r := gin.New()
+
+	handler.NewHandler(&handler.Config{
+		R:                   r,
+		NotificationService: notificationService,
+		BaseURL:             "/api/v1/",
+	})
 	logger := util.GetLogger()
 
 	r.Use(ginzap.Ginzap(logger, time.RFC3339, true))
@@ -37,7 +51,6 @@ func main() {
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	// Route Paths
-	api.RegisterRoutes(r.Group("/api/v1"))
 
 	err := r.Run(env.Env.ServerHost + ":" + env.Env.ServerPort) // listen and serve on 0.0.0.0:8080 --> 127.0.0.1:8080
 
