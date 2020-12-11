@@ -29,13 +29,13 @@ async def handle_requests(nats_conn, subject_name):
     """handle_request ()"""
     sc = STAN()
     await sc.connect(NATS_CLUSTER_ID, str(uuid.uuid1()), nats=nats_conn)
-    logger.info("Listening for requests on %s subject...", subject_name)
+    logger.info("Listening for requests on %s", subject_name)
 
     async def cb(msg):
         """cb (msg)"""
         notification_data = json.loads(msg.data.decode())
         try:
-            logger.info("Notification Handler received %s ...", notification_data)
+            logger.info("Notification Handler received %s", notification_data)
             # Handler internal logic by calling SMS or Email Vendor
             await sc.ack(msg)
         except Exception as e:
