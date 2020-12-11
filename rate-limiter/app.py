@@ -34,13 +34,13 @@ async def handle_requests(nats_conn, subject_name):
     """handle_request ()"""
     sc = STAN()
     await sc.connect(NATS_CLUSTER_ID, str(uuid.uuid1()), nats=nats_conn)
-    logger.info("Listening for requests on %s subject...", subject_name)
+    logger.info("Listening for requests on %s", subject_name)
 
     async def cb(msg):
         """cb (msg)"""
         notification_data = json.loads(msg.data.decode())
         try:
-            logger.info("Message received %s ...", notification_data)
+            logger.info("Message received", notification_data)
             notification_handler_name = notification_data['notification_handler']['name']
             if throttle(notification_handler_name, notification_data['notification_handler']['rate_per_minute']):
                 # fetch data from user service
@@ -63,22 +63,23 @@ def throttle(handler, rate_per_min):
     logger.info("Message received for throttle %s ... %s", handler, rate_per_min)
 
     # set the points for this route to 4
-    ROUTE_SCORE = 4
+    ROUTE_SCORE = 1
 
     r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0)
 
     epoch_ms = int(time.time() * 1000)
     pipe = r.pipeline()
+    logger.info("Message received for throttle %s ... %s", handler, rate_per_min)
 
     pipe.zremrangebyscore("%s:per_minute" % handler, 0, epoch_ms - 6000)
     pipe.zadd("%s:per_minute" % handler, {"%d:%d" % (epoch_ms, ROUTE_SCORE): epoch_ms})
     pipe.zrange("%s:per_minute" % handler, 0, -1)
-    pipe.expire("%s:per_minute" % handler, 6001)
+    pipe.expire("%s:per_minute" % handler, 6000)
 
     res = pipe.execute()
 
     minute_score = sum(int(i.decode("utf-8").split(':')[-1]) for i in res[2])
-
+    logger.info("Minute Score --->  %s", minute_score)
     if minute_score > rate_per_min:
         # "DATA Exceeded", status=429
         return False

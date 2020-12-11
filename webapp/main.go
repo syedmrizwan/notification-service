@@ -1,7 +1,11 @@
 package main
 
 import (
-	"notification_service_webapp/api"
+	"github.com/nats-io/stan.go"
+	"notification_service_webapp/database"
+	"notification_service_webapp/handler"
+	"notification_service_webapp/repository"
+	"notification_service_webapp/service"
 	"notification_service_webapp/util"
 	"os"
 	"time"
@@ -28,8 +32,34 @@ func main() {
 	if env.Env.BuildEnv == util.PRODUCTION {
 		gin.SetMode(gin.ReleaseMode)
 	}
+	db := database.GetConnection()
+	notificationRepository := repository.NewNotificationRepository(db)
 
+	conn, err := stan.Connect(
+		env.Env.NatsCluster,
+		env.Env.NatsClient,
+		stan.NatsURL(env.Env.NatsAddress),
+	)
+	if err != nil {
+		os.Exit(1)
+	}
+	messagingRepository := repository.NewMessagingRepository(conn)
+
+	notificationService := service.NewNotificationService(&service.NSConfig{
+		NotificationRepository: notificationRepository,
+	})
+
+	messagingService := service.NewMessagingService(&service.MSConfig{
+		MessagingRepository: messagingRepository,
+	})
 	r := gin.New()
+
+	handler.NewHandler(&handler.Config{
+		R:                   r,
+		NotificationService: notificationService,
+		MessagingService:    messagingService,
+		BaseURL:             "/api/v1/",
+	})
 	logger := util.GetLogger()
 
 	r.Use(ginzap.Ginzap(logger, time.RFC3339, true))
@@ -37,9 +67,8 @@ func main() {
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	// Route Paths
-	api.RegisterRoutes(r.Group("/api/v1"))
 
-	err := r.Run(env.Env.ServerHost + ":" + env.Env.ServerPort) // listen and serve on 0.0.0.0:8080 --> 127.0.0.1:8080
+	err = r.Run(env.Env.ServerHost + ":" + env.Env.ServerPort)
 
 	if err != nil {
 		logger.Error(err.Error())

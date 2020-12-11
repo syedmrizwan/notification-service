@@ -9,7 +9,6 @@ import (
 var logger *zap.Logger
 
 func init() {
-
 	switch env.Env.BuildEnv {
 	case DEVELOPMENT:
 		logger, _ = zap.NewDevelopment()

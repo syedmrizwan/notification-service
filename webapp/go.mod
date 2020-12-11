@@ -8,10 +8,12 @@ require (
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-openapi/spec v0.19.15 // indirect
 	github.com/go-pg/pg/v9 v9.2.0
+	github.com/google/uuid v1.0.0
 	github.com/joho/godotenv v1.3.0
 	github.com/nats-io/stan.go v0.7.0
 	github.com/pborman/uuid v1.2.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/stretchr/testify v1.6.1
 	github.com/swaggo/files v0.0.0-20190704085106-630677cd5c14
 	github.com/swaggo/gin-swagger v1.3.0
 	github.com/swaggo/swag v1.6.9

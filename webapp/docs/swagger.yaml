@@ -1,5 +1,5 @@
 definitions:
-  api.BulkNotificationBody:
+  model.BulkNotificationBody:
     properties:
       notification_mode:
         type: string
@@ -9,17 +9,6 @@ definitions:
         items:
           type: integer
         type: array
-    type: object
-  api.NotificationPostBody:
-    properties:
-      Priority:
-        type: string
-      notification_mode:
-        type: string
-      notification_text:
-        type: string
-      user_id:
-        type: integer
     type: object
   model.Notification:
     properties:
@@ -49,6 +38,17 @@ definitions:
       rate_per_minute:
         type: integer
     type: object
+  model.NotificationPostBody:
+    properties:
+      Priority:
+        type: string
+      notification_mode:
+        type: string
+      notification_text:
+        type: string
+      user_id:
+        type: integer
+    type: object
   model.NotificationText:
     properties:
       id:
@@ -74,7 +74,7 @@ paths:
         name: payload
         required: true
         schema:
-          $ref: '#/definitions/api.BulkNotificationBody'
+          $ref: '#/definitions/model.BulkNotificationBody'
       produces:
       - application/json
       responses:
@@ -112,7 +112,7 @@ paths:
         name: payload
         required: true
         schema:
-          $ref: '#/definitions/api.NotificationPostBody'
+          $ref: '#/definitions/model.NotificationPostBody'
       produces:
       - application/json
       responses:

@@ -21,6 +21,8 @@ services:
       - RATE_LIMITER_CHANNEL_NAME=Notification.Service.Rate.Limiter
     depends_on:
       - postgres_server
+      - nats-streaming-server
+    restart: on-failure:10
     ports:
       - 8080:8080
     network_mode: 'host'
