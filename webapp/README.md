@@ -12,6 +12,10 @@
 
 `docker push syedmrizwan/notification_service_webapp:v0.0.1`
 
+**Running Tests**
+
+`go test ./...`
+
 ##### **Environment variables and values**
 ```
 DB_NAME=notification_service

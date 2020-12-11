@@ -84,6 +84,12 @@ func TestCreateNotifications(t *testing.T) {
 		mockNotificationService.On("Create", mock.AnythingOfType("*context.timerCtx"), notificationPostBody).
 			Return(mockNotification, nil)
 
+		message, _ := json.Marshal(mockNotification)
+		mockMessagingService := new(mocks.MockMessagingService)
+		mockMessagingService.
+			On("Write", mockNotification.Priority, message).
+			Return(nil)
+
 		// a response recorder for getting written http response
 		rr := httptest.NewRecorder()
 
@@ -92,10 +98,10 @@ func TestCreateNotifications(t *testing.T) {
 		NewHandler(&Config{
 			R:                   router,
 			NotificationService: mockNotificationService,
+			MessagingService:    mockMessagingService,
 			BaseURL:             "",
 		})
 
-		// create a request body with empty email and password
 		reqBody, err := json.Marshal(notificationPostBody)
 		assert.NoError(t, err)
 
@@ -125,7 +131,7 @@ func TestCreateBulkNotifications(t *testing.T) {
 		var now time.Time
 		mockNotification := []*model.Notification{&model.Notification{
 			ID:                    1,
-			Priority:              "High",
+			Priority:              "Low",
 			UserId:                1,
 			NotificationText:      &model.NotificationText{ID: 1, Message: "Hello"},
 			NotificationTextID:    1,
@@ -137,6 +143,11 @@ func TestCreateBulkNotifications(t *testing.T) {
 		mockNotificationService.On("BulkCreate", mock.AnythingOfType("*context.timerCtx"), bulkNotificationBody).
 			Return(mockNotification, nil)
 
+		mockMessagingService := new(mocks.MockMessagingService)
+		mockMessagingService.
+			On("Write", "Low", mock.Anything).
+			Return(nil)
+
 		// a response recorder for getting written http response
 		rr := httptest.NewRecorder()
 
@@ -145,10 +156,10 @@ func TestCreateBulkNotifications(t *testing.T) {
 		NewHandler(&Config{
 			R:                   router,
 			NotificationService: mockNotificationService,
+			MessagingService:    mockMessagingService,
 			BaseURL:             "",
 		})
 
-		// create a request body with empty email and password
 		reqBody, err := json.Marshal(bulkNotificationBody)
 		assert.NoError(t, err)
 

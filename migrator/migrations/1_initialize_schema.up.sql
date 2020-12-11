@@ -38,5 +38,5 @@ create table if not exists notifications
 alter table notifications owner to postgres;
 
 
-insert into notification_handlers (id, name, rate_per_minute) values (1, 'SMS', 15);
-insert into notification_handlers (id, name, rate_per_minute) values (2, 'Email', 30);
+insert into notification_handlers (id, name, rate_per_minute) values (1, 'SMS', 150);
+insert into notification_handlers (id, name, rate_per_minute) values (2, 'Email', 300);

@@ -1,0 +1,102 @@
+{
+	"id": "c38ae80e-d83d-62d0-5ecc-b4a2dec64361",
+	"name": "Notification Service",
+	"description": "",
+	"order": [
+		"c217f28d-9275-0927-1a66-8f9fdea06ae6",
+		"d2d792ec-9dc6-8705-ef77-2e82ef31ffa0",
+		"9636270c-0254-f03a-76a1-e465a1f00c62"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 1607691939756,
+	"owner": "2871919",
+	"public": false,
+	"requests": [
+		{
+			"id": "9636270c-0254-f03a-76a1-e465a1f00c62",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8080/api/v1/notifications",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "c38ae80e-d83d-62d0-5ecc-b4a2dec64361",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Create Notification",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1607692712196,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n  \"Priority\": \"High\",\n  \"notification_mode\": \"SMS\",\n  \"notification_text\": \"OPT code is 1X2Ac3\",\n  \"user_id\": 185\n}"
+		},
+		{
+			"id": "c217f28d-9275-0927-1a66-8f9fdea06ae6",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8080/api/v1/bulk-notifications",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "c38ae80e-d83d-62d0-5ecc-b4a2dec64361",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Bulk Notification",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1607692033980,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n  \"notification_mode\": \"Email\",\n  \"notification_text\": \"Promotional Message\",\n  \"user_ids\": [\n    1,2,3,4,5\n  ]\n}"
+		},
+		{
+			"id": "d2d792ec-9dc6-8705-ef77-2e82ef31ffa0",
+			"headers": "",
+			"headerData": [],
+			"url": "http://localhost:8080/api/v1/notifications",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "GET",
+			"collectionId": "c38ae80e-d83d-62d0-5ecc-b4a2dec64361",
+			"data": null,
+			"dataMode": "params",
+			"name": "Get All Notifications",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1607692604118,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {}
+		}
+	]
+}

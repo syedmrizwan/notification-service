@@ -3,12 +3,16 @@ package handler
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"notification_service_webapp/model"
+	"notification_service_webapp/util"
 	"time"
 
 	"github.com/gin-gonic/gin"
 )
+
+var errNotificationMode = errors.New("notification Mode does not exists")
 
 // GetNotifications godoc
 // @Tags Notifications
@@ -47,9 +51,19 @@ func (h *Handler) CreateNotifications(c *gin.Context) {
 		return
 	}
 
+	if !util.ContainsString(util.SupportedPriority, notificationPostBody.Priority) {
+		c.JSON(http.StatusNotFound, gin.H{"message": "Priority can either be High, Medium or Low"})
+		return
+	}
+
 	notification, err := h.NotificationService.Create(ctx, &notificationPostBody)
 	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
+		switch err.Error() {
+		case errNotificationMode.Error():
+			c.JSON(http.StatusNotFound, gin.H{"message": "Notification Mode does not exists"})
+		default:
+			c.AbortWithError(http.StatusInternalServerError, err)
+		}
 		return
 	}
 
@@ -81,7 +95,12 @@ func (h *Handler) CreateBulkNotifications(c *gin.Context) {
 	}
 	notifications, err := h.NotificationService.BulkCreate(ctx, &bulkNotificationBody)
 	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
+		switch err.Error() {
+		case errNotificationMode.Error():
+			c.JSON(http.StatusNotFound, gin.H{"message": "Notification Mode does not exists"})
+		default:
+			c.AbortWithError(http.StatusInternalServerError, err)
+		}
 		return
 	}
 

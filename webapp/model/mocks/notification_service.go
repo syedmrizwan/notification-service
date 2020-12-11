@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-// MockNotificationService is a mock type for model.UserService
+// MockNotificationService is a mock type for model.NotificationService
 type MockNotificationService struct {
 	mock.Mock
 }

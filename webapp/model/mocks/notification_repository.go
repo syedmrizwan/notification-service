@@ -6,12 +6,12 @@ import (
 	"notification_service_webapp/model"
 )
 
-// MockUserRepository is a mock type for model.UserRepository
+// MockNotificationRepository is a mock type for model.NotificationRepository
 type MockNotificationRepository struct {
 	mock.Mock
 }
 
-// GetAll is mock of UserRepository GetAll
+// GetAll is mock of NotificationRepository GetAll
 func (m *MockNotificationRepository) GetAll(ctx context.Context) ([]model.Notification, error) {
 	ret := m.Called(ctx)
 
