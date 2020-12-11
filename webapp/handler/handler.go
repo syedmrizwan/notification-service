@@ -9,6 +9,7 @@ import (
 // Handler struct holds required services for handler to function
 type Handler struct {
 	NotificationService model.NotificationService
+	MessagingService    model.MessagingService
 }
 
 // Config will hold services that will eventually be injected into this
@@ -16,6 +17,7 @@ type Handler struct {
 type Config struct {
 	R                   *gin.Engine
 	NotificationService model.NotificationService
+	MessagingService    model.MessagingService
 	BaseURL             string
 }
 
@@ -25,9 +27,10 @@ func NewHandler(c *Config) {
 	// Create a handler (which will later have injected services)
 	h := &Handler{
 		NotificationService: c.NotificationService,
+		MessagingService:    c.MessagingService,
 	} // currently has no properties
 
-	// Create an account group
+	// Create a group
 	g := c.R.Group(c.BaseURL)
 
 	g.GET("/notifications", h.GetNotifications)

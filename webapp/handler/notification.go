@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 	"notification_service_webapp/model"
 	"time"
@@ -25,10 +26,7 @@ func (h *Handler) GetNotifications(c *gin.Context) {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"notifications": notifications,
-	})
+	c.JSON(http.StatusOK, gin.H{"notifications": notifications})
 }
 
 // CreateNotifications godoc
@@ -55,14 +53,12 @@ func (h *Handler) CreateNotifications(c *gin.Context) {
 		return
 	}
 
-	//message, _ := json.Marshal(notification)
-	//if err := PushMessageToNATS(fmt.Sprintf("%s.%s", env.Env.RateLimiterChannel, notification.Priority), message); err != nil {
-	//	c.AbortWithError(http.StatusInternalServerError, err)
-	//	return
-	//}
-	c.JSON(http.StatusCreated, gin.H{
-		"notification": notification,
-	})
+	message, _ := json.Marshal(notification)
+	if err := h.MessagingService.Write(notification.Priority, message); err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+	c.JSON(http.StatusCreated, gin.H{"notification": notification})
 }
 
 // CreateBulkNotifications godoc
@@ -88,15 +84,13 @@ func (h *Handler) CreateBulkNotifications(c *gin.Context) {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
-	//
-	//for _, notification := range notifications {
-	//	message, _ := json.Marshal(notification)
-	//	if err := PushMessageToNATS(fmt.Sprintf("%s.%s", env.Env.RateLimiterChannel, notification.Priority), message); err != nil {
-	//		c.AbortWithError(http.StatusInternalServerError, err)
-	//		return
-	//	}
-	//}
-	c.JSON(http.StatusCreated, gin.H{
-		"notifications": notifications,
-	})
+
+	for _, notification := range notifications {
+		message, _ := json.Marshal(notification)
+		if err := h.MessagingService.Write(notification.Priority, message); err != nil {
+			c.AbortWithError(http.StatusInternalServerError, err)
+			return
+		}
+	}
+	c.JSON(http.StatusCreated, gin.H{"notifications": notifications})
 }
